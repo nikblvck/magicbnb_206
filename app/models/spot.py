@@ -21,6 +21,9 @@ class Spot(db.Model):
     created_at = db.Column(db.DateTime, nullable=False, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, nullable=False, server_default=db.func.now(), server_onupdate=db.func.now())
 
+    images = db.relationship('Image', backref='spot', lazy=True)
+    has_amenities = db.relationship('HasAmenity', backref='spot', lazy=True)
+
     def to_dict(self):
       return {
         'id': self.id,
@@ -39,5 +42,7 @@ class Spot(db.Model):
         'longitude': self.longitude,
         'latitude': self.latitude,
         'created_at': self.created_at,
-        'updated_at': self.updated_at
+        'updated_at': self.updated_at,
+        'images': [image.to_dict() for image in self.images],
+        'has_amenities': [has_amenity.to_dict() for has_amenity in self.has_amenities]
       }
